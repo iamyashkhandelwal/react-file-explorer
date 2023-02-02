@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import { useState } from "react";
+import Folder from "./components/Folder";
+import explorer from "./data/folderData";
 import './App.css';
+import useTreeTraversal from "./hooks/use-tree-traversal";
 
 function App() {
+  const [ explorerData, setExplorerData ] = useState(explorer);
+  const { insertNode, deleteNode } = useTreeTraversal();
+
+  console.log('explorer -> ', explorerData);
+
+  const handleAddNode = (name, isFolder, parentId) => {
+    const newTree = insertNode(explorerData, name, isFolder, parentId);
+
+    setExplorerData(newTree);
+  }
+
+  const handleDeleteNode = (id) => {
+    deleteNode(explorerData, id);
+    const newTree = deleteNode(explorerData, id);
+
+    setExplorerData(newTree);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="mainContainer">
+      <Folder
+        explorerData={explorerData} 
+        handleAddNode={handleAddNode} 
+        handleDeleteNode={handleDeleteNode} 
+      />
     </div>
   );
 }
